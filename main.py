@@ -17,14 +17,16 @@ class Game():
         # starting a new game
         self.all_sprites = pg.sprite.Group()
         self.platforms = pg.sprite.Group()
-        self.player = Player()
-        p1 = Platform(0,HEIGHT-40, WIDTH, 20)
-        self.all_sprites.add(p1)
-        self.platforms.add(p1)
-        p2 = Platform(WIDTH/2-40,HEIGHT*3/4, 100, 40)
-        self.all_sprites.add(p2)
-        self.platforms.add(p2)
+        self.player = Player(self)
         self.all_sprites.add(self.player)
+        
+        #creating the platforms
+        for plat in PLATFORM_LIST:
+            p = Platform(*plat)
+            self.all_sprites.add(p)
+            self.platforms.add(p)
+        
+        # start running the game
         self.run()
     
     def run(self):
@@ -44,7 +46,24 @@ class Game():
             if hits:
                 self.player.pos.y = hits[0].rect.top
                 self.player.vel.y = 0   
-            
+        
+        #scrolling the platform when the player reaches the top 1/4 of screen
+        if self.player.rect.top <= HEIGHT / 4:
+                self.player.pos.y += abs(self.player.vel.y)
+                for plat in self.platforms:
+                    plat.rect.y += abs(self.player.vel.y)
+                    #deleting every platform that is outside the screen
+                    if plat.rect.top > HEIGHT:
+                        plat.kill()
+        
+        #creating new platforms to spawn as the old ones gets deleted
+        while len(self.platforms) < 6:
+            width = random.randrange(25,100)
+            x = random.randrange(0, WIDTH-width)
+            y = random.randrange(-40, -10)
+            p = Platform(x,y,width,20)
+            self.all_sprites.add(p)
+            self.platforms.add(p)
             
     def draw(self):
         #drawing the updated elements
