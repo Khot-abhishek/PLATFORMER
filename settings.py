@@ -4,6 +4,10 @@ HEIGHT = 410
 FPS = 60
 
 
+#player properties
+PLAYER_ACC = 0.5
+PLAYER_FRICTION = -0.12
+
 # Define Colors
 WHITE = (255,255,255)
 BLACK = (0,0,0)
