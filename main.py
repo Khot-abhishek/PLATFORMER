@@ -16,7 +16,14 @@ class Game():
     def new(self):
         # starting a new game
         self.all_sprites = pg.sprite.Group()
+        self.platforms = pg.sprite.Group()
         self.player = Player()
+        p1 = Platform(0,HEIGHT-40, WIDTH, 40)
+        self.all_sprites.add(p1)
+        self.platforms.add(p1)
+        p2 = Platform(WIDTH/2-40,HEIGHT*3/4, 100, 40)
+        self.all_sprites.add(p2)
+        self.platforms.add(p2)
         self.all_sprites.add(self.player)
         self.run()
     
@@ -32,7 +39,12 @@ class Game():
     def update(self):
         # updating all elements after taking the events
         self.all_sprites.update()
-    
+        hits = pg.sprite.spritecollide(self.player, self.platforms, False)
+        if hits:
+            self.player.pos.y = hits[0].rect.top
+            self.player.vel.y = 0   
+            
+            
     def draw(self):
         #drawing the updated elements
         self.screen.fill(BLACK)

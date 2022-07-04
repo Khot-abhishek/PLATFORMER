@@ -15,7 +15,7 @@ class Player(pg.sprite.Sprite):
         
         
     def update(self):
-        self.acc = pg.math.Vector2(0,0)
+        self.acc = pg.math.Vector2(0,5)
         keys = pg.key.get_pressed()
         if keys[pg.K_LEFT]:
             self.acc.x = -PLAYER_ACC
@@ -23,7 +23,15 @@ class Player(pg.sprite.Sprite):
             self.acc.x = PLAYER_ACC
         
         #applying friction to player accelaraion      
-        self.acc += self.vel * PLAYER_FRICTION 
-        self.vel += self.acc
+        self.acc.x += self.vel.x * PLAYER_FRICTION 
+        self.vel += self.acc    # increasing velocity according to accelaration
         self.pos += self.vel
-        self.rect = self.pos     
+        self.rect.midbottom = self.pos     
+        
+
+class Platform(pg.sprite.Sprite):
+    def __init__(self,x,y,w,h):
+        super().__init__()
+        self.image = pg.Surface((w,h))
+        self.image.fill(WHITE)
+        self.rect = self.image.get_rect(topleft=(x,y))        
